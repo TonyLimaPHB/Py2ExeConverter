@@ -6,7 +6,7 @@
 
 **Py2ExeConverter** é uma ferramenta simples e poderosa para converter scripts Python em **executáveis** para Windows (.exe). Utilizando o **PyInstaller** e uma interface gráfica construída com **Tkinter**, este projeto facilita o empacotamento de aplicativos Python para usuários que não têm Python instalado no sistema.
 
-🔧 **Funcionalidade Principal**: Converta facilmente **scripts Python** em **executáveis Windows** (e Linux/macOS, quando executado nesses sistemas).
+🔧 **Funcionalidade Principal**: Converta facilmente **scripts Python** em **executáveis Windows**.
 
 ---
 
