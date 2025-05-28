@@ -25,5 +25,5 @@
 ### 1. **Clone o Repositório**
 
 ```bash
-git clone [https://github.com/seu-usuario/Py2ExeConverter.git](https://github.com/TonyLimaPHB/ExePyBuilder)
+git clone https://github.com/TonyLimaPHB/ExePyBuilder
 cd Py2ExeConverter
