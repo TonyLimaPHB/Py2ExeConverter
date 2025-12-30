@@ -1,173 +1,281 @@
-🎬 MINI DOCUMENTÁRIO — Py2ExeConverter
-Transformando Python em EXE do jeito certo
-=================================================
+🎬 MINI DOCUMENTÁRIO TÉCNICO — Py2ExeConverter
+Arquitetura, funcionamento e propósito de cada módulo
+=================================================================
 
-🧠 CAPÍTULO 1 — O PROBLEMA REAL
--------------------------------------------------
-Converter projetos Python em executáveis (.exe) no Windows parece simples…
-até não ser.
+🧠 INTRODUÇÃO
+-----------------------------------------------------------------
+O Py2ExeConverter foi projetado com uma arquitetura modular,
+onde cada arquivo .py possui uma responsabilidade clara.
 
-❌ Scripts funcionam em .py, mas quebram em .exe
-❌ Arquivos são criados em pastas erradas
-❌ Tkinter para de funcionar
-❌ Erros como _MEIxxxxx aparecem
-❌ Projetos modulares falham sem explicação
+Essa separação garante:
+✔ manutenção fácil
+✔ evolução segura
+✔ código limpo
+✔ entendimento rápido do fluxo
 
-Tudo isso acontece porque:
-👉 O PyInstaller empacota o código
-👉 Extrai arquivos para uma pasta temporária
-👉 E o código original não foi feito pensando em EXE
+Nada aqui é “arquivo solto”.
+Tudo tem função definida.
 
-📌 Era preciso ir além de “apenas usar PyInstaller”.
-
--------------------------------------------------
-🚀 CAPÍTULO 2 — A IDEIA
--------------------------------------------------
-A ideia do Py2ExeConverter nasceu de uma pergunta simples:
-
-🤔 “E se o conversor entendesse o projeto
-ANTES de tentar converter?”
-
-Não apenas converter.
-Mas:
-🧠 analisar
-⚠️ alertar
-🛠️ corrigir
-✅ garantir funcionamento real
-
-Assim surgiu o conceito:
-👉 Um conversor com inteligência.
+=================================================================
+📁 PASTA: core/
+=================================================================
 
 -------------------------------------------------
-🔍 CAPÍTULO 3 — ANÁLISE ESTÁTICA DE CÓDIGO
+📄 project_utils.py
 -------------------------------------------------
-Antes do build, o Py2ExeConverter:
+🎯 FUNÇÃO:
+Detectar automaticamente o arquivo principal do projeto.
 
-📂 Percorre todos os arquivos .py do projeto
-📖 Lê o código como texto (sem executar nada)
-🔎 Procura padrões problemáticos, como:
-   - os.getcwd()
-   - __file__
-   - Path.cwd()
-   - caminhos relativos (open("arquivo.txt"))
+🧠 COMO FUNCIONA:
+- Varre a pasta do projeto
+- Procura arquivos comuns de entrada:
+  main.py, app.py, run.py, __main__.py
+- Retorna o caminho correto do script principal
 
-✔ Seguro
-✔ Rápido
-✔ Confiável
-✔ Sem risco ao usuário
-
-Isso permite prever erros ANTES que eles aconteçam.
+📌 POR QUE EXISTE:
+Evita pedir ao usuário algo que pode ser detectado
+automaticamente.
 
 -------------------------------------------------
-⚠️ CAPÍTULO 4 — DETECÇÃO DE RISCOS
+📄 modular_project_utils.py
 -------------------------------------------------
-Quando algo perigoso é detectado, o sistema:
+🎯 FUNÇÃO:
+Detectar arquivos externos usados pelo projeto.
 
-🚨 Identifica o tipo de problema
-📊 Classifica o risco
-🧾 Explica ao usuário o que pode acontecer
+🧠 COMO FUNCIONA:
+- Analisa a estrutura do projeto
+- Identifica arquivos como:
+  imagens, txt, json, ini, cfg, etc.
+- Prepara essas informações para o --add-data do PyInstaller
 
-Nada é feito automaticamente sem avisar.
-O usuário mantém controle total.
-
--------------------------------------------------
-🛠️ CAPÍTULO 5 — A CORREÇÃO INTELIGENTE
--------------------------------------------------
-Se o projeto manipula arquivos ou pastas, o Py2ExeConverter oferece:
-
-✨ Uma correção segura e profissional
-
-🔧 Ele injeta uma função de diretório base:
-   - Usa sys.executable quando é EXE
-   - Usa __file__ quando é script .py
-
-📁 Isso garante que:
-✔ arquivos
-✔ logs
-✔ configs
-✔ pastas
-
-sejam criados **ao lado do executável**,
-e não em Temp\\_MEIxxxxx.
-
-📌 O _MEI continua existindo,
-mas deixa de importar.
+📌 POR QUE EXISTE:
+Projetos modulares quase sempre precisam de dados extras.
+Esse módulo elimina falhas comuns de build.
 
 -------------------------------------------------
-🖥️ CAPÍTULO 6 — SUPORTE COMPLETO A GUI
+📄 hidden_import_detector.py
 -------------------------------------------------
-Projetos com interface gráfica também foram prioridade.
+🎯 FUNÇÃO:
+Detectar imports que o PyInstaller não identifica sozinho.
 
-O Py2ExeConverter:
-🖥️ Detecta automaticamente Tkinter
-📦 Inclui dados Tcl/Tk no build
-❌ Corrige erros como "_tk_data not found"
-🧩 Ajusta ocultação do console quando necessário
+🧠 COMO FUNCIONA:
+- Lê os arquivos .py
+- Procura padrões de import dinâmico
+- Gera automaticamente a lista de hidden-imports
 
-Resultado:
-✔ GUI funciona
-✔ EXE estável
-✔ Experiência profissional
-
--------------------------------------------------
-📦 CAPÍTULO 7 — PYINSTALLER SEM SOFRIMENTO
--------------------------------------------------
-O conversor automatiza o que normalmente dá dor de cabeça:
-
-⚙️ Hidden-import automático
-📁 Add-data automático
-🎨 Ícone personalizado
-🧵 Conversão em thread (UI não trava)
-📊 Barra de progresso
-📜 Logs detalhados
-
-Tudo integrado em uma interface clara.
+📌 POR QUE EXISTE:
+Evita erros clássicos como:
+“ModuleNotFoundError” no EXE final.
 
 -------------------------------------------------
-🎨 CAPÍTULO 8 — INTERFACE E EXPERIÊNCIA
+📄 gui_detector.py
 -------------------------------------------------
-Nada de ferramentas confusas.
+🎯 FUNÇÃO:
+Detectar se o projeto usa interface gráfica.
 
-O Py2ExeConverter oferece:
-🪟 Interface gráfica limpa
-🌙 Tema claro / escuro
-💾 Configurações persistentes
-📜 Botão “Abrir Log”
-ℹ️ Janela “Sobre”
+🧠 COMO FUNCIONA:
+- Analisa imports (ex: tkinter)
+- Identifica uso de GUI
+- Informa ao sistema se deve ocultar console
+- Ativa correções específicas de GUI
 
-Pensado para uso real.
-
--------------------------------------------------
-🏁 CAPÍTULO 9 — O RESULTADO FINAL
--------------------------------------------------
-O Py2ExeConverter não é apenas um conversor.
-
-Ele é:
-🧠 Um analisador de projetos Python
-🛠️ Uma engine de correção automática
-🚀 Um gerador de EXE profissional
-
-Resolve problemas que:
-❌ muitos ignoram
-❌ poucos entendem
-✅ quase todos enfrentam
+📌 POR QUE EXISTE:
+EXEs com GUI exigem tratamento especial,
+principalmente com Tkinter.
 
 -------------------------------------------------
-👨‍💻 CAPÍTULO FINAL — O AUTOR
+📄 path_usage_detector.py
 -------------------------------------------------
-Criado por:
+🎯 FUNÇÃO:
+Detectar métodos problemáticos de acesso a diretórios.
+
+🧠 COMO FUNCIONA:
+- Faz análise estática (não executa código)
+- Procura padrões como:
+  os.getcwd()
+  __file__
+  Path.cwd()
+  caminhos relativos
+- Classifica o risco do projeto em EXE
+
+📌 POR QUE EXISTE:
+Esses métodos causam o famoso problema do:
+Temp\_MEIxxxxx
+
+-------------------------------------------------
+📄 base_dir_injector.py
+-------------------------------------------------
+🎯 FUNÇÃO:
+Corrigir automaticamente projetos que manipulam arquivos.
+
+🧠 COMO FUNCIONA:
+- Injeta no topo do script principal uma função segura:
+  get_base_dir()
+- Usa sys.executable quando é EXE
+- Usa __file__ quando é script .py
+- Opcionalmente aplica os.chdir()
+
+📌 POR QUE EXISTE:
+Neutraliza completamente o problema do _MEI,
+sem hacks e sem quebrar código.
+
+-------------------------------------------------
+📄 pyinstaller_utils.py
+-------------------------------------------------
+🎯 FUNÇÃO:
+Centralizar toda a lógica de chamada do PyInstaller.
+
+🧠 COMO FUNCIONA:
+- Monta o comando PyInstaller dinamicamente
+- Adiciona:
+  --onefile
+  --noconsole
+  --icon
+  --add-data
+  --hidden-import
+- Executa o build em thread separada
+
+📌 POR QUE EXISTE:
+Isola o PyInstaller do restante do sistema,
+facilitando manutenção e evolução.
+
+-------------------------------------------------
+📄 logger_utils.py
+-------------------------------------------------
+🎯 FUNÇÃO:
+Gerenciar logs do conversor.
+
+🧠 COMO FUNCIONA:
+- Cria arquivo de log
+- Registra etapas do processo
+- Salva erros e mensagens importantes
+
+📌 POR QUE EXISTE:
+Permite diagnóstico rápido sem travar a interface.
+
+-------------------------------------------------
+📄 config_utils.py
+-------------------------------------------------
+🎯 FUNÇÃO:
+Persistir configurações do usuário.
+
+🧠 COMO FUNCIONA:
+- Salva dados em arquivo local (json)
+- Mantém:
+  tema
+  último projeto
+  último ícone
+  preferências
+
+📌 POR QUE EXISTE:
+Melhora experiência do usuário
+e evita configurações repetitivas.
+
+=================================================================
+📁 PASTA: ui/
+=================================================================
+
+-------------------------------------------------
+📄 main_window.py
+-------------------------------------------------
+🎯 FUNÇÃO:
+Interface principal do Py2ExeConverter.
+
+🧠 COMO FUNCIONA:
+- Controla toda a UI
+- Integra TODOS os módulos do core
+- Gerencia:
+  seleção de arquivos
+  avisos
+  progresso
+  mensagens finais
+
+📌 POR QUE EXISTE:
+É o cérebro visual do sistema.
+Nada acontece fora dele.
+
+-------------------------------------------------
+📄 sobre_window.py
+-------------------------------------------------
+🎯 FUNÇÃO:
+Janela “Sobre”.
+
+🧠 COMO FUNCIONA:
+- Exibe informações do projeto
+- Autor
+- Objetivo
+- Contato
+
+📌 POR QUE EXISTE:
+Padroniza apresentação profissional do software.
+
+-------------------------------------------------
+📄 theme.py
+-------------------------------------------------
+🎯 FUNÇÃO:
+Gerenciar temas visuais.
+
+🧠 COMO FUNCIONA:
+- Aplica estilos do Tkinter
+- Alterna entre tema claro e escuro
+- Centraliza toda a lógica visual
+
+📌 POR QUE EXISTE:
+Evita código de estilo espalhado
+pela interface.
+
+=================================================================
+📄 ARQUIVOS DE RAIZ
+=================================================================
+
+-------------------------------------------------
+📄 main.py
+-------------------------------------------------
+🎯 FUNÇÃO:
+Ponto de entrada do projeto.
+
+🧠 COMO FUNCIONA:
+- Inicializa o aplicativo
+- Chama iniciar_app()
+
+📌 POR QUE EXISTE:
+Permite build limpo e organizado.
+
+-------------------------------------------------
+📄 build.py
+-------------------------------------------------
+🎯 FUNÇÃO:
+Gerar o EXE do próprio Py2ExeConverter.
+
+🧠 COMO FUNCIONA:
+- Chama PyInstaller
+- Define ícone
+- Define nome do executável
+- Prepara para distribuição
+
+📌 POR QUE EXISTE:
+Isola o processo de build do código principal.
+
+=================================================================
+🏁 CONCLUSÃO FINAL
+=================================================================
+
+O Py2ExeConverter foi construído como:
+🧠 analisador
+🛠️ corretor
+🚀 conversor profissional
+
+Cada arquivo tem propósito.
+Nada é redundante.
+Nada é improvisado.
+
+👨‍💻 Autor / Criador:
 Tony Lima  
 📱 WhatsApp: +55 86 98119-2287
 
-🎯 Projeto desenvolvido para resolver problemas reais,
-com foco em:
-✔ robustez
-✔ segurança
-✔ profissionalismo
-
-🔗 Repositório:
+🔗 GitHub:
 https://github.com/TonyLimaPHB/Py2ExeConverter
 
-=================================================
-🎉 FIM
-=================================================
+=================================================================
+🎉 FIM DO DOCUMENTÁRIO TÉCNICO
+=================================================================
